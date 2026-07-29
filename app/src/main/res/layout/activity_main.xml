@@ -1,85 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0A12"
-    android:padding="16dp">
+    android:background="#0D0E15">
 
-    <!-- Верхний статус-бар -->
+    <!-- 1. Верхний статус-бар (Клик по нему открывает шторку) -->
     <LinearLayout
-        android:id="@+id/statusBar"
+        android:id="@+id/topStatusBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:layout_alignParentTop="true">
+        android:padding="16dp">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="AURA OS v1.0"
-            android:textColor="#A0A0B0"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <!-- Виджет часов и даты -->
-    <LinearLayout
-        android:id="@+id/clockWidget"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/statusBar"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
-        android:gravity="center">
-
-        <!-- Часы -->
         <TextClock
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:format12Hour="HH:mm"
             android:format24Hour="HH:mm"
             android:textColor="#FFFFFF"
-            android:textSize="48sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
-        <!-- Дата -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@android:drawable/ic_menu_manage"
+            app:tint="#00F0FF" />
+    </LinearLayout>
+
+    <!-- 2. Центральный неоновый виджет Aura -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
         <TextClock
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:format12Hour="EEEE, d MMMM"
-            android:format24Hour="EEEE, d MMMM"
-            android:textColor="#A0A0B0"
-            android:textSize="14sp" />
+            android:format12Hour="HH:mm"
+            android:format24Hour="HH:mm"
+            android:textColor="#00F0FF"
+            android:textSize="64sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.2"
+            android:text="AURA OS DESKTOP"
+            android:textColor="#FF007A"
+            android:textSize="14sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Поле поиска -->
-    <EditText
-        android:id="@+id/search_box"
+    <!-- 3. Нижний Док быстрых приложений (Quick Dock) -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/clockWidget"
-        android:layout_marginTop="16dp"
-        android:background="#1E1E2A"
-        android:hint="Поиск приложений..."
-        android:textColorHint="#6C6C80"
-        android:textColor="#FFFFFF"
-        android:padding="12dp"
-        android:textSize="14sp"
-        android:singleLine="true" />
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        android:background="#151824"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-    <!-- Сетка приложений -->
-    <GridView
-        android:id="@+id/apps_grid"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/search_box"
-        android:layout_marginTop="16dp"
-        android:numColumns="4"
-        android:verticalSpacing="16dp"
-        android:horizontalSpacing="16dp"
-        android:stretchMode="columnWidth" />
+        <!-- Кнопка вызова Настроек -->
+        <ImageView
+            android:id="@+id/dockSettings"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="12dp"
+            android:background="#22283A"
+            android:padding="10dp"
+            android:src="@android:drawable/ic_menu_preferences"
+            app:tint="#00F0FF" />
+
+        <!-- Кнопка вызова Шторки Cyber-HUD -->
+        <ImageView
+            android:id="@+id/dockShade"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="12dp"
+            android:background="#22283A"
+            android:padding="10dp"
+            android:src="@android:drawable/ic_menu_compass"
+            app:tint="#FF007A" />
+
+    </LinearLayout>
 
 </RelativeLayout>
+
 
 
