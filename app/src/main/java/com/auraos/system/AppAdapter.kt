@@ -13,8 +13,9 @@ class AppAdapter(
 ) : RecyclerView.Adapter<AppAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val appIcon: ImageView = itemView.findViewById(R.id.appIcon)
-        val appLabel: TextView = itemView.findViewById(R.id.appLabel)
+        // Исправленные id: соответствуют item_app.xml
+        val appIcon: ImageView = itemView.findViewById(R.id.app_icon)
+        val appLabel: TextView = itemView.findViewById(R.id.app_name)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,11 +28,13 @@ class AppAdapter(
         holder.appLabel.text = app.label
         holder.appIcon.setImageDrawable(app.icon)
 
-        // При клике на иконку — запуск приложения
+        // При клике — запуск приложения (если доступен launch intent)
         holder.itemView.setOnClickListener {
             val launchIntent = holder.itemView.context.packageManager
                 .getLaunchIntentForPackage(app.packageName)
             if (launchIntent != null) {
+                // на случай, если context не Activity
+                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 holder.itemView.context.startActivity(launchIntent)
             }
         }
