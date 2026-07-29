@@ -1,53 +1,42 @@
 package com.auraos.system
 
-import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 
 class AppAdapter(
-    private val context: Context,
-    private val originalList: List<AppInfo>
-) : BaseAdapter() {
+    private val appList: List<AppModel>
+) : RecyclerView.Adapter<AppAdapter.ViewHolder>() {
 
-    private var filteredList: List<AppInfo> = originalList
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val appIcon: ImageView = itemView.findViewById(R.id.appIcon)
+        val appLabel: TextView = itemView.findViewById(R.id.appLabel)
+    }
 
-    override fun getCount(): Int = filteredList.size
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_app, parent, false)
+        return ViewHolder(view)
+    }
 
-    override fun getItem(position: Int): Any = filteredList[position]
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val app = appList[position]
+        holder.appLabel.text = app.label
+        holder.appIcon.setImageDrawable(app.icon)
 
-    override fun getItemId(position: Int): Long = position.toLong()
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view: View = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_app, parent, false)
-        
-        val appInfo = filteredList[position]
-        val iconView = view.findViewById<ImageView>(R.id.app_icon)
-        val nameView = view.findViewById<TextView>(R.id.app_name)
-
-        iconView.setImageDrawable(appInfo.icon)
-        nameView.text = appInfo.label
-
-        view.setOnClickListener {
-            val launchIntent = context.packageManager.getLaunchIntentForPackage(appInfo.packageName)
+        // При клике на иконку — запуск приложения
+        holder.itemView.setOnClickListener {
+            val launchIntent = holder.itemView.context.packageManager
+                .getLaunchIntentForPackage(app.packageName)
             if (launchIntent != null) {
-                context.startActivity(launchIntent)
+                holder.itemView.context.startActivity(launchIntent)
             }
         }
-
-        return view
     }
 
-    // Функция поиска по названию приложения
-    fun filter(query: String) {
-        filteredList = if (query.isEmpty()) {
-            originalList
-        } else {
-            originalList.filter { it.label.contains(query, ignoreCase = true) }
-        }
-        notifyDataSetChanged()
-    }
+    override fun getItemCount(): Int = appList.size
 }
+
