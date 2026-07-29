@@ -23,12 +23,57 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- Виджет часов и даты -->
+    <LinearLayout
+        android:id="@+id/clockWidget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/statusBar"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Часы -->
+        <TextClock
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:format12Hour="HH:mm"
+            android:format24Hour="HH:mm"
+            android:textColor="#FFFFFF"
+            android:textSize="48sp"
+            android:textStyle="bold" />
+
+        <!-- Дата -->
+        <TextClock
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:format12Hour="EEEE, d MMMM"
+            android:format24Hour="EEEE, d MMMM"
+            android:textColor="#A0A0B0"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Поле поиска -->
+    <EditText
+        android:id="@+id/search_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/clockWidget"
+        android:layout_marginTop="16dp"
+        android:background="#1E1E2A"
+        android:hint="Поиск приложений..."
+        android:textColorHint="#6C6C80"
+        android:textColor="#FFFFFF"
+        android:padding="12dp"
+        android:textSize="14sp"
+        android:singleLine="true" />
+
     <!-- Сетка приложений -->
     <GridView
         android:id="@+id/apps_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/statusBar"
+        android:layout_below="@id/search_box"
         android:layout_marginTop="16dp"
         android:numColumns="4"
         android:verticalSpacing="16dp"
@@ -36,4 +81,5 @@
         android:stretchMode="columnWidth" />
 
 </RelativeLayout>
+
 
