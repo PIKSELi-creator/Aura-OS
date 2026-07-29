@@ -1,52 +1,77 @@
 package com.auraos.system;
 
-import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.widget.EditText;
-import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity {
-
-    private AppAdapter adapter;
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 1. Получаем список приложений
-        List<AppInfo> apps = AppManager.INSTANCE.getInstalledApps(this);
+        LinearLayout topStatusBar = findViewById(R.id.topStatusBar);
+        ImageView dockSettings = findViewById(R.id.dockSettings);
+        ImageView dockShade = findViewById(R.id.dockShade);
+        RecyclerView appsRecyclerView = findViewById(R.id.appsRecyclerView);
 
-        // 2. Настраиваем сетку
-        GridView gridView = findViewById(R.id.apps_grid);
-        adapter = new AppAdapter(this, apps);
-        gridView.setAdapter(adapter);
+        // Настройка сетки: 4 приложения в один ряд
+        appsRecyclerView.setLayoutManager(new GridLayoutManager(this, 4));
 
-        // 3. Настраиваем реальный поиск
-        EditText searchBox = findViewById(R.id.search_box);
-        searchBox.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        // Получаем все установленные приложения и передаем в адаптер
+        List<AppModel> installedApps = getInstalledApps();
+        AppAdapter adapter = new AppAdapter(installedApps);
+        appsRecyclerView.setAdapter(adapter);
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (adapter != null) {
-                    adapter.filter(s.toString());
-                }
-            }
+        // Открытие Cyber-HUD шторки при клике на верхний бар
+        topStatusBar.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, QuickSettingsActivity.class);
+            startActivity(intent);
+        });
 
-            @Override
-            public void afterTextChanged(Editable s) {}
+        // Открытие шторки из дока
+        dockShade.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, QuickSettingsActivity.class);
+            startActivity(intent);
+        });
+
+        // Открытие Настроек из дока
+        dockSettings.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        // Блокируем кнопку "Назад"
+    // Сканер всех системных и сторонних приложений Android
+    private List<AppModel> getInstalledApps() {
+        List<AppModel> apps = new ArrayList<>();
+        PackageManager pm = getPackageManager();
+
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+        List<ResolveInfo> allApps = pm.queryIntentActivities(intent, 0);
+
+        for (ResolveInfo ri : allApps) {
+            String label = ri.loadLabel(pm).toString();
+            String packageName = ri.activityInfo.packageName;
+            Drawable icon = ri.loadIcon(pm);
+
+            apps.add(new AppModel(label, packageName, icon));
+        }
+
+        return apps;
     }
 }
-
-
